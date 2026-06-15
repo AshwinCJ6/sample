@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', () =>
         option.textContent = i;
         ag.appendChild(option);
     }
-    function renderTable() 
+    function renderTable(users) 
     {
         tableBody.innerHTML = '';
         users.forEach((user, index) => 
@@ -43,7 +43,7 @@ document.addEventListener('DOMContentLoaded', () =>
 
             tableBody.appendChild(row);
         });
-        addButtonEvents();
+        addButtonEvents(users);
     }
     function addButtonEvents() {
         document.querySelectorAll('.deleteBtn').forEach(button => 
