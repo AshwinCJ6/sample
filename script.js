@@ -83,7 +83,7 @@ document.addEventListener('DOMContentLoaded', () =>
                 });
             });
     }
-    form.addEventListener('submit', e => 
+    form.addEventListener('submit', async e => 
     {
         e.preventDefault();
         const fullName =document.getElementById('fullName').value.trim();
@@ -111,13 +111,21 @@ document.addEventListener('DOMContentLoaded', () =>
             editIndex = -1;
             submitBtn.textContent = 'Register';
         }
-        else 
-        {
-            users.push(userData);
-            msg.textContent ='Successfully added';
+       else
+       {
+            await fetch('http://localhost:3000/users', 
+            {
+            method: 'POST',
+            headers: 
+           {
+             'Content-Type': 'application/json'
+           },
+             body: JSON.stringify(userData)
+            });
+        msg.textContent = 'Successfully added';
         }
         msg.style.color = 'green';
-        renderTable();
+        await fetchUsers();
         form.reset();
         setTimeout(() => 
         {
