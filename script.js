@@ -109,7 +109,15 @@ document.addEventListener('DOMContentLoaded', () =>
         };
         if (editIndex !== -1)
         {
-            users[editIndex] = userData;
+            await fetch(`http://localhost:3000/users/${editIndex}`, 
+            {
+                method: 'PUT',headers: 
+                {
+                  'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(userData)
+            });
+            await fetchUsers();
             msg.textContent ='User updated successfully';
             editIndex = -1;
             submitBtn.textContent = 'Register';
@@ -135,4 +143,5 @@ document.addEventListener('DOMContentLoaded', () =>
             msg.textContent = '';
         }, 4000);
     });
+    fetchUsers();
 });
