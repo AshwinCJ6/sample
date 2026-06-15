@@ -48,14 +48,17 @@ document.addEventListener('DOMContentLoaded', () =>
     function addButtonEvents() {
         document.querySelectorAll('.deleteBtn').forEach(button => 
             {
-                button.addEventListener('click', () => 
+                button.addEventListener('click',async () => 
                 {
                     const index = button.dataset.index;
                     const confirmDelete =confirm('Are you sure you want to delete this user?');
                     if (confirmDelete) 
                     {
-                        users.splice(index, 1);
-                        renderTable();
+                       await fetch(`http://localhost:3000/users/${index}`,
+                        {
+                            method: 'DELETE'
+                        });
+                        await fetchUsers();
                         msg.textContent ='User deleted successfully';
                         msg.style.color = 'green';
                     }
