@@ -7,6 +7,12 @@ document.addEventListener('DOMContentLoaded', () =>
     const submitBtn = document.getElementById('submitBtn');
     const users = [];
     let editIndex = -1;
+    async function fetchUsers() 
+    {
+    const response = await fetch('http://localhost:3000/users');
+    const users = await response.json();
+    renderTable(users);
+    }
     for (let i = 18; i <= 34; i++)
     {
         const option = document.createElement('option');
