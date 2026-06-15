@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add User Form</title>
+</head>
+<body style="text-align: center; margin-top: 50px; font-family: sans-serif;">
+    <h2>Add New User</h2>
+    <form id="addUserForm" style="display: inline-block; text-align: left; border: 1px solid #ccc; padding: 20px; border-radius: 8px;">
+        <div style="margin-bottom: 15px;">
+            <label for="fullName">Name:</label><br>
+            <input type="text" id="fullName" name="fullName" required>
+        </div>
+        <div style="margin-bottom: 15px;">
+            <label for="email">Email:</label><br>
+            <input type="email" id="email" name="email" required>
+        </div>
+        <div style="margin-bottom: 15px;">
+            <label for="age">Age:</label><br>
+            <select id="age" name="age" required>
+                <option value="" disabled selected>Select your age</option>
+            </select>
+        </div>
+        <div style="margin-bottom: 15px;">
+            <label>Hobbies:</label><br>
+            <div style="margin-top: 5px;">
+                <label style="margin-right: 10px;"><input type="checkbox" name="hobbies" value="sports"> Sports</label>
+                <label style="margin-right: 10px;"><input type="checkbox" name="hobbies" value="music"> Music</label>
+                <label style="margin-right: 10px;"><input type="checkbox" name="hobbies" value="reading"> Reading</label>
+                <label style="margin-right: 10px;"><input type="checkbox" name="hobbies" value="writing"> Writing</label>
+                <label style="margin-right: 10px;"><input type="checkbox" name="hobbies" value="traveling"> Traveling</label>
+            </div>
+        </div>
+        <button type="submit" id="submitBtn" style="width: 100%; padding: 8px;">Register</button>
+    </form> 
+    <div id="message" style="margin-top: 20px; height: 20px;"></div>
+    <hr style="width: 80%; margin: 30px auto; border: 0; border-top: 1px solid #eee;">
+    <h3>Registered Users</h3>
+    <table id="usersTable" style="margin: 20px auto; width: 80%; border-collapse: collapse; text-align: left;">
+        <thead>
+            <tr style="background-color: #f2f2f2; border-bottom: 2px solid #ccc;">
+                <th style="padding: 10px; border: 1px solid #ddd;">Name</th>
+                <th style="padding: 10px; border: 1px solid #ddd;">Email</th>
+                <th style="padding: 10px; border: 1px solid #ddd;">Age</th>
+                <th style="padding: 10px; border: 1px solid #ddd;">Hobbies</th>
+                <th style="padding: 10px; border: 1px solid #ddd;">Action</th>
+            </tr>
+        </thead>
+        <tbody id="userTableBody">
+            </tbody>
+    </table>
+    <script src="script.js"></script>
+</body>
+</html>
