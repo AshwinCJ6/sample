@@ -1,56 +1,103 @@
 const express = require('express');
 const cors = require('cors');
+const sqlite3 = require('sqlite3').verbose();
 const app = express();
 const PORT = 3000;
 app.use(cors());
 app.use(express.json());
-app.use(express.static(__dirname));
-let users = [];
+const db = new sqlite3.Database('./users.db', (err) => {
+    if (err) {
+        console.error(err.message);
+    } else {
+        console.log('Connected to SQLite database.');
+    }
+});
+db.run(`
+    CREATE TABLE IF NOT EXISTS users (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        fullName TEXT NOT NULL,
+        email TEXT NOT NULL,
+        age INTEGER NOT NULL,
+        hobbies TEXT
+    )
+`);
 app.get('/users', (req, res) => {
-    res.status(200).json(users);
+    db.all('SELECT * FROM users', [], (err, rows) => {
+        if (err) {
+            return res.status(500).json({ error: err.message });
+        }
+        const users = rows.map(user => ({
+            ...user,
+            hobbies: user.hobbies
+                ? JSON.parse(user.hobbies)
+                : []
+        }));
+        res.json(users);
+    });
 });
 app.post('/users', (req, res) => {
-    const newUser = req.body;
-    users.push(newUser);
-    res.status(201).json({
-        message: 'User added successfully',
-        user: newUser
-    });
+    const { fullName, email, age, hobbies } = req.body;
+    db.run(
+        `INSERT INTO users (fullName, email, age, hobbies)
+         VALUES (?, ?, ?, ?)`,
+        [fullName, email, age, JSON.stringify(hobbies)],
+        function (err) {
+            if (err) {
+                return res.status(500).json({
+                    error: err.message
+                });
+            }
+            res.status(201).json({
+                message: 'User added successfully',
+                id: this.lastID
+            });
+        }
+    );
 });
-app.put('/users/:index', (req, res) => {
-    const index = parseInt(req.params.index);
-
-    if (isNaN(index) || index < 0 || index >= users.length) {
-        return res.status(404).json({
-            message: 'User not found'
-        });
-    }
-    users[index] = req.body;
-    res.status(200).json({
-        message: 'User updated successfully',
-        user: users[index]
-    });
+app.put('/users/:id', (req, res) => {
+    const { fullName, email, age, hobbies } = req.body;
+    db.run(
+        `UPDATE users
+         SET fullName = ?,
+             email = ?,
+             age = ?,
+             hobbies = ?
+         WHERE id = ?`,
+        [
+            fullName,
+            email,
+            age,
+            JSON.stringify(hobbies),
+            req.params.id
+        ],
+        function (err) {
+            if (err) {
+                return res.status(500).json({
+                    error: err.message
+                });
+            }
+            res.json({
+                message: 'User updated successfully'
+            });
+        }
+    );
 });
-
-/* DELETE - Delete a user */
-app.delete('/users/:index', (req, res) => {
-    const index = parseInt(req.params.index);
-
-    if (isNaN(index) || index < 0 || index >= users.length) {
-        return res.status(404).json({
-            message: 'User not found'
-        });
-    }
-
-    const deletedUser = users.splice(index, 1);
-
-    res.status(200).json({
-        message: 'User deleted successfully',
-        user: deletedUser[0]
-    });
+app.delete('/users/:id', (req, res) => {
+    db.run(
+        'DELETE FROM users WHERE id = ?',
+        [req.params.id],
+        function (err) {
+            if (err) {
+                return res.status(500).json({
+                    error: err.message
+                });
+            }
+            res.json({
+                message: 'User deleted successfully'
+            });
+        }
+    );
 });
-
-/* Start the server */
 app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);
 });
